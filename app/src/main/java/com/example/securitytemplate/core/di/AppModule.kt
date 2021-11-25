@@ -18,7 +18,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesNavigationManager() = NavigationManager(HomeDirections)
+    fun providesNavigationManager() = NavigationManager(HomeDirections,  listOf(HomeDirections))
 
     @Singleton
     @Provides

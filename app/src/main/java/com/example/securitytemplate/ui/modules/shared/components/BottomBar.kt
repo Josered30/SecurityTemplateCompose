@@ -28,12 +28,12 @@ fun BottomBar(navigationManager: NavigationManager) {
     val items = listOf(
         NavigationItem.Home,
     )
+
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary,
     ) {
 
-        val currentRoute = navigationManager.currentRoute
         items.forEachIndexed { index, item ->
             BottomNavigationItem(
                 icon = {
@@ -41,12 +41,10 @@ fun BottomBar(navigationManager: NavigationManager) {
                 },
                 label = { Text(text = item.title) },
                 alwaysShowLabel = true,
-                selected = index == navigationManager.currentBottomBarIndex,
+                selected = index == navigationManager.currentRouteGroup(),
                 onClick = {
-                    if (currentRoute != item.navigationCommand.destination) {
-                        navigationManager.currentBottomBarIndex = index
-                        navigationManager.appNavigate(item.navigationCommand)
-                    }
+                    navigationManager.currentIndexGroup = index
+                    navigationManager.appNavigate(item.navigationCommand)
                 },
             )
         }
