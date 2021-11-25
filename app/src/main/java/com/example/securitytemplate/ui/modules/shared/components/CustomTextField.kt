@@ -11,9 +11,7 @@ import androidx.compose.material.TextFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -26,7 +24,8 @@ fun CustomTextField(
     imeAction: ImeAction = ImeAction.Done,
     onValueChange: (TextFieldValue) -> Unit = {},
     colors: TextFieldColors,
-    label: String = ""
+    label: String = "",
+    showPassword: Boolean = false
 ) {
 
     val relocation = remember { BringIntoViewRequester() }
@@ -48,7 +47,12 @@ fun CustomTextField(
             keyboardType = keyboardType,
             imeAction = imeAction
         ),
-        colors = colors
+        colors = colors,
+        visualTransformation = if (keyboardType != KeyboardType.Password || showPassword) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
     )
 
 }

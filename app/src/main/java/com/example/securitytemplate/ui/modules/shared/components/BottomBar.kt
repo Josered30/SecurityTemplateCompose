@@ -10,20 +10,16 @@ import com.example.securitytemplate.core.navigation.*
 
 sealed class NavigationItem(
     val title: String,
-    private val module: NavigationGroup,
+    val module: NavigationGroup,
     val icon: ImageVector
 ) {
     val navigationCommand: NavigationCommand = module.default
 
-    object Home : NavigationItem(
+    object Home: NavigationItem(
         "Home",
         HomeDirections,
         Icons.Rounded.Home,
     )
-
-    fun checkSelected(route: String): Boolean {
-        return module.isMainRoute(route)
-    }
 }
 
 
@@ -37,20 +33,18 @@ fun BottomBar(navigationManager: NavigationManager) {
         contentColor = MaterialTheme.colors.onPrimary,
     ) {
 
-        val currentRoute = navigationManager.currentRouteGroup().destination
-        items.forEach { item ->
-
-            val selected = item.checkSelected(currentRoute)
-
+        val currentRoute = navigationManager.currentRoute
+        items.forEachIndexed { index, item ->
             BottomNavigationItem(
                 icon = {
                     Icon(item.icon, item.title)
                 },
                 label = { Text(text = item.title) },
                 alwaysShowLabel = true,
-                selected = selected,
+                selected = index == navigationManager.currentBottomBarIndex,
                 onClick = {
                     if (currentRoute != item.navigationCommand.destination) {
+                        navigationManager.currentBottomBarIndex = index
                         navigationManager.appNavigate(item.navigationCommand)
                     }
                 },

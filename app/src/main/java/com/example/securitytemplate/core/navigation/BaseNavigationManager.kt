@@ -10,10 +10,9 @@ abstract class BaseNavigationManager(
         MutableSharedFlow<NavigationCommand>(extraBufferCapacity = 1)
     val appSharedFlow = _appSharedFlow.asSharedFlow()
 
-    protected var currentRouteGroup = startDestination
-
     var canPop = false
     var currentRoute = ""
+    var currentBottomBarIndex = 0
 
     fun appNavigate(
         directions: NavigationCommand,
@@ -21,7 +20,5 @@ abstract class BaseNavigationManager(
         _appSharedFlow.tryEmit(directions)
     }
 
-    open fun currentRouteGroup(): NavigationCommand {
-        return currentRouteGroup.default
-    }
+
 }

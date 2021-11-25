@@ -50,10 +50,11 @@ fun MainPage() {
         mutableStateOf(false)
     }
     var startDestination by rememberSaveable {
-        mutableStateOf(HomeDirections.root.destination)
+        mutableStateOf(navigationManager.startDestination.root.destination)
     }
 
     LaunchedEffect(Unit) {
+        //navigationManager.currentBottomBarIndex = 1
 
         val authRoute: (AuthState) -> Unit = {
             startDestination = when (it) {
