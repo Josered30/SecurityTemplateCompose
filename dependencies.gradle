@@ -1,6 +1,6 @@
 ext.versions = [
         // accompanist
-        accompanistVersion      : '0.20.0',
+        accompanistVersion      : '0.21.3-beta',
 
         // splash screen
         splashScreenVersion     : '1.0.0-alpha01',
@@ -18,7 +18,7 @@ ext.versions = [
         roomVersion             : '2.3.0',
 
         // compose
-        composeVersion          : '1.1.0-alpha06',
+        composeVersion          : '1.1.0-beta03',
         activityVersion         : '1.4.0',
 
         // coil
@@ -29,7 +29,7 @@ ext.versions = [
 
         // hilt
         hiltCoreVersion         : '2.38.1',
-        hiltNavigation          : '1.0.0-alpha03',
+        hiltNavigation          : '1.0.0-beta01',
 
         // material
         materialVersion         : '1.4.0',

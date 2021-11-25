@@ -19,7 +19,7 @@ object RemoteModule {
 //    fun providesOkHttpClient(): OkHttpClient =
 //        OkHttpClient
 //            .Builder()
-//            .readTimeout(60, TimeUnit.SECONDS)
+//            .readTimeout(5, TimeUnit.SECONDS)
 //            .build()
 
 //    @Provides

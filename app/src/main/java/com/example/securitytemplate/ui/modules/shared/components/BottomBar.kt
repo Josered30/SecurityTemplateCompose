@@ -1,12 +1,10 @@
 package com.example.securitytemplate.ui.modules.shared.components;
 
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.securitytemplate.core.navigation.*
 
@@ -28,45 +26,32 @@ sealed class NavigationItem(
     }
 }
 
+
 @Composable
-fun BottomBar(appNavigate: (NavigationCommand) -> Unit = {}, currentRoute: String?) {
-
-    var selected by remember {
-        mutableStateOf(0)
-    }
-
+fun BottomBar(navigationManager: NavigationManager) {
     val items = listOf(
         NavigationItem.Home,
     )
-
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.onPrimary
+        contentColor = MaterialTheme.colors.onPrimary,
     ) {
 
-        items.forEachIndexed { index, item ->
-            selected = if (item.checkSelected(currentRoute.orEmpty())) {
-                index
-            } else {
-                selected
-            }
+        val currentRoute = navigationManager.currentRouteGroup().destination
+        items.forEach { item ->
+
+            val selected = item.checkSelected(currentRoute)
+
             BottomNavigationItem(
                 icon = {
-                    Icon(
-                        item.icon, item.title,
-                        tint = if (selected == index) {
-                            Color.Red
-                        } else {
-                            Color.Blue
-                        }
-                    )
+                    Icon(item.icon, item.title)
                 },
                 label = { Text(text = item.title) },
                 alwaysShowLabel = true,
-                selected = selected == index,
+                selected = selected,
                 onClick = {
                     if (currentRoute != item.navigationCommand.destination) {
-                        appNavigate(item.navigationCommand)
+                        navigationManager.appNavigate(item.navigationCommand)
                     }
                 },
             )

@@ -29,8 +29,7 @@ fun HomePage(homeViewModel: HomeViewModel) {
         modifier = Modifier.navigationBarsPadding(),
         bottomBar = {
             BottomBar(
-                homeViewModel::appNavigate,
-                homeViewModel.navigationManager.currentRoute
+                homeViewModel.navigationManager
             )
         }
 

@@ -20,7 +20,6 @@ import com.google.accompanist.insets.statusBarsPadding
 @Composable
 fun LoginPage(loginViewModel: LoginViewModel) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
-
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = Modifier.navigationBarsPadding(),

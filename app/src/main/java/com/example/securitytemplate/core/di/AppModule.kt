@@ -2,6 +2,7 @@ package com.example.securitytemplate.core.di
 
 import android.content.Context
 import com.example.securitytemplate.core.auth.AuthManager
+import com.example.securitytemplate.core.navigation.HomeDirections
 import com.example.securitytemplate.core.navigation.NavigationManager
 import dagger.Module
 import dagger.Provides
@@ -17,7 +18,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesNavigationManager() = NavigationManager()
+    fun providesNavigationManager() = NavigationManager(HomeDirections)
 
     @Singleton
     @Provides

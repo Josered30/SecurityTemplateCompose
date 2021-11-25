@@ -54,16 +54,17 @@ dependencies {
     implementation "com.google.android.material:material:$versions.materialVersion"
 
     //icons
-//    implementation "androidx.compose.material:material-icons-extended:$versions.composeVersion"
-//    implementation "br.com.devsrsouza.compose.icons.android:font-awesome:$versions.fontAwesomeVersion"
+    //implementation "androidx.compose.material:material-icons-extended:$versions.composeVersion"
+    //implementation "br.com.devsrsouza.compose.icons.android:font-awesome:$versions.fontAwesomeVersion"
 
     //accompanist
     implementation "com.google.accompanist:accompanist-insets:$versions.accompanistVersion"
     implementation"com.google.accompanist:accompanist-pager:$versions.accompanistVersion"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$versions.accompanistVersion"
+    implementation "com.google.accompanist:accompanist-navigation-animation:$versions.accompanistVersion"
 
     //splashscreen
-//    implementation "androidx.core:core-splashscreen:$versions.splashScreenVersion"
+    //implementation "androidx.core:core-splashscreen:$versions.splashScreenVersion"
 
     //navigation
     implementation "androidx.navigation:navigation-compose:$versions.navigationVersion"
@@ -79,9 +80,9 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$versions.composeVersion"
 
     //room
-//    implementation "androidx.room:room-runtime:$versions.roomVersion"
-//    kapt "androidx.room:room-compiler:$versions.roomVersion"
-//    implementation "androidx.room:room-ktx:$versions.roomVersion"
+    //implementation "androidx.room:room-runtime:$versions.roomVersion"
+    //kapt "androidx.room:room-compiler:$versions.roomVersion"
+    //implementation "androidx.room:room-ktx:$versions.roomVersion"
 
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycleVersion"
@@ -95,11 +96,11 @@ dependencies {
     ////testImplementation "org.robolectric:robolectric:$versions.roboelectricVersion"
 
     // coil
-//    implementation "io.coil-kt:coil-compose:$versions.coilVersion"
+    //implementation "io.coil-kt:coil-compose:$versions.coilVersion"
 
     // retrofit
-//    implementation "com.squareup.retrofit2:retrofit:$versions.retrofitVersion"
-//    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofitVersion"
+    //implementation "com.squareup.retrofit2:retrofit:$versions.retrofitVersion"
+    //implementation "com.squareup.retrofit2:converter-gson:$versions.retrofitVersion"
 
     // coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutineVersion"
