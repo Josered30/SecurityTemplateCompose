@@ -22,7 +22,6 @@ sealed class NavigationItem(
     )
 }
 
-
 @Composable
 fun BottomBar(navigationManager: NavigationManager) {
     val items = listOf(
