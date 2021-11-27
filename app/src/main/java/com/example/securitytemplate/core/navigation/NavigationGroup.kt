@@ -1,6 +1,5 @@
 package com.example.securitytemplate.core.navigation
 
-import androidx.navigation.NamedNavArgument
 
 abstract class NavigationGroup(val root: NavigationRoute) {
     abstract var default: NavigationRoute

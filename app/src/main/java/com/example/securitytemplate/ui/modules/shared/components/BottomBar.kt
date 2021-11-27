@@ -1,6 +1,5 @@
 package com.example.securitytemplate.ui.modules.shared.components;
 
-
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
@@ -20,7 +19,6 @@ sealed class NavigationItem(
         Icons.Rounded.Home,
     )
 }
-
 
 @Composable
 fun BottomBar(navigationManager: NavigationManager, currentRoute: String) {
@@ -42,15 +40,7 @@ fun BottomBar(navigationManager: NavigationManager, currentRoute: String) {
                 -1
             }
             BottomNavigationItem(
-                icon = {
-                    Icon(
-                        item.icon, item.title, tint = if (selected == index) {
-                            Color.White
-                        } else {
-                            Color.Transparent
-                        }
-                    )
-                },
+                icon = { Icon(item.icon, item.title) },
                 label = { Text(text = item.title) },
                 alwaysShowLabel = true,
                 selected = selected == index,

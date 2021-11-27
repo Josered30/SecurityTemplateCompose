@@ -8,25 +8,33 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.securitytemplate.core.navigation.BaseNavigationManager
-import com.example.securitytemplate.core.navigation.NavigationCommand
 import com.example.securitytemplate.ui.viewModels.LoginViewModel
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.insets.statusBarsPadding
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginPage(loginViewModel: LoginViewModel) {
+
+
     val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val navigationManager = loginViewModel.navigationManager
+
+    LaunchedEffect(Unit) {
+        delay(10)
+        navigationManager.setShowUIFlow(false)
+    }
+
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = Modifier.navigationBarsPadding(),
     ) {
         LoginPageComponent(loginViewModel.navigationManager, loginViewModel::login)
     }
+
 }
 
 @Composable

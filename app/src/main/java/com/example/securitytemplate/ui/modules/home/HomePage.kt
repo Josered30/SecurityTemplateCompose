@@ -23,7 +23,6 @@ fun HomePage(homeViewModel: HomeViewModel) {
     LaunchedEffect(Unit) {
         delay(10)
         navigationManager.setShowUIFlow(true)
-        // navigationManager.setImeInsetsFlow(true)
     }
 
     Scaffold(

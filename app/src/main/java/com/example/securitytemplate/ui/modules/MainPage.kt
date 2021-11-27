@@ -59,16 +59,21 @@ fun InitNavigation(
 
         val authRoute: (AuthState) -> Unit = {
             val startDestinationAux = when (it) {
-                AuthState.EMPTY -> AuthDirections.root.destination
-                AuthState.AUTH -> HomeDirections.root.destination
-                AuthState.UN_AUTH -> AuthDirections.root.destination
+                AuthState.EMPTY -> {
+                    AuthDirections.root.destination
+                }
+                AuthState.AUTH -> {
+                    HomeDirections.root.destination
+                }
+                AuthState.UN_AUTH -> {
+                    AuthDirections.root.destination
+                }
             }
-            setStartDestination(startDestinationAux)
-
+            //setStartDestination(startDestinationAux)
             val start = navController.graph.findStartDestination()
             navController.popBackStack(start.id, true)
-            navController.graph.setStartDestination(startDestination)
-            navController.navigate(startDestination)
+            navController.graph.setStartDestination(startDestinationAux)
+            navController.navigate(startDestinationAux)
         }
 
         val navigate: (String) -> Unit = {
@@ -89,17 +94,6 @@ fun InitNavigation(
                 // Restore state when reselecting a previously selected item
                 // restoreState = true
             }
-        }
-
-        if (!init) {
-            if (authManager.checkToken() && authManager.currentValue != AuthState.AUTH) {
-                authManager.changeState(AuthState.AUTH)
-                //authRoute(AuthState.AUTH)
-            } else if (!authManager.checkAuth()) {
-                authManager.changeState(AuthState.UN_AUTH)
-                authRoute(AuthState.UN_AUTH)
-            }
-            init = true
         }
 
         navigationManager.appSharedFlow.onEach {
@@ -155,8 +149,22 @@ fun MainPage() {
     var startDestination by rememberSaveable {
         mutableStateOf(navigationManager.startDestination.root.destination)
     }
+    var init by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     val scaffoldState = rememberScaffoldState()
+
+    if (!init) {
+        if (authManager.checkToken() && authManager.currentValue != AuthState.AUTH) {
+            startDestination = HomeDirections.root.destination
+            authManager.changeState(AuthState.AUTH)
+        } else if (!authManager.checkAuth()) {
+            startDestination = AuthDirections.root.destination
+            authManager.changeState(AuthState.UN_AUTH)
+        }
+        init = true
+    }
 
     InitNavigation(
         navController,
@@ -203,9 +211,7 @@ fun AppNavigation(
 ) {
     AnimatedNavHost(
         navController,
-        startDestination,
-        enterTransition = { fadeIn(initialAlpha = 1f) },
-        exitTransition = { fadeOut(targetAlpha = 0f) }
+        startDestination
     ) {
 
         navigation(
