@@ -1,49 +1,37 @@
 package com.example.securitytemplate.core.navigation
 
+import androidx.navigation.NamedNavArgument
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
+
 abstract class BaseNavigationManager(
     val startDestination: NavigationGroup,
-    private val bottomNavigationGroups: List<NavigationGroup> = listOf(),
 ) {
+
     private val _appSharedFlow =
-        MutableSharedFlow<NavigationCommand>(extraBufferCapacity = 1)
+        MutableSharedFlow<String>(extraBufferCapacity = 1)
     val appSharedFlow = _appSharedFlow.asSharedFlow()
 
-    var currentIndexGroup = 0
+    private val _showUIFlow = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
+    val showUIFlow = _showUIFlow.asSharedFlow()
+
+    private val _imeInsetsFlow = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
+    val imeInsetsFlow = _imeInsetsFlow.asSharedFlow()
+
     var canPop = false
     var currentRoute = ""
 
-    init {
-        val aux = bottomNavigationGroups.indexOf(startDestination)
-        if (aux != -1) {
-            currentIndexGroup = aux
-        }
+
+    fun setShowUIFlow(flag: Boolean) {
+        _showUIFlow.tryEmit(flag)
     }
 
-    fun appNavigate(
-        directions: NavigationCommand,
-    ) {
-        _appSharedFlow.tryEmit(directions)
+    fun setImeInsetsFlow(flag: Boolean) {
+        _imeInsetsFlow.tryEmit(flag)
     }
 
-    fun currentRouteGroup(): Int {
-        for (i in bottomNavigationGroups.indices) {
-            if (bottomNavigationGroups[i].isRoute(currentRoute)) {
-                currentIndexGroup = i
-                break
-            }
-        }
-        return currentIndexGroup
-    }
-
-    fun checkBottomNavRoute(destination: String): Boolean {
-        for (group in bottomNavigationGroups) {
-            if (group.isMainRoute(destination)) {
-                return true
-            }
-        }
-        return false
+    fun appNavigate(route: String) {
+        _appSharedFlow.tryEmit(route)
     }
 }

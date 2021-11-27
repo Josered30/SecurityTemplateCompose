@@ -2,8 +2,7 @@ package com.example.securitytemplate.core.navigation
 
 
 class NavigationManager(
-    startDestination: NavigationGroup,
-    bottomNavigationGroups: List<NavigationGroup>
+    startDestination: NavigationGroup
 ) :
-    BaseNavigationManager(startDestination, bottomNavigationGroups) {
+    BaseNavigationManager(startDestination) {
 }

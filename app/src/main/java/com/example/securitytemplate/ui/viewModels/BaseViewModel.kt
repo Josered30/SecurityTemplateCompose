@@ -10,8 +10,4 @@ abstract class BaseViewModel constructor(
     val navigationManager: NavigationManager,
     val authManager: AuthManager,
 ) : ViewModel() {
-
-    open fun appNavigate(navigationCommand: NavigationCommand): Unit {
-        navigationManager.appNavigate(navigationCommand)
-    }
 }

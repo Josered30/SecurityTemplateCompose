@@ -11,6 +11,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.example.securitytemplate.core.navigation.BaseNavigationManager
 import com.example.securitytemplate.core.navigation.NavigationCommand
 import com.example.securitytemplate.ui.viewModels.LoginViewModel
 import com.google.accompanist.insets.navigationBarsPadding
@@ -24,13 +25,13 @@ fun LoginPage(loginViewModel: LoginViewModel) {
         scaffoldState = scaffoldState,
         modifier = Modifier.navigationBarsPadding(),
     ) {
-        LoginPageComponent(loginViewModel::appNavigate, loginViewModel::login)
+        LoginPageComponent(loginViewModel.navigationManager, loginViewModel::login)
     }
 }
 
 @Composable
 fun LoginPageComponent(
-    appNavigate: (NavigationCommand) -> Unit,
+    navigationManager: BaseNavigationManager,
     login: () -> Unit = {},
 ) {
     Column(

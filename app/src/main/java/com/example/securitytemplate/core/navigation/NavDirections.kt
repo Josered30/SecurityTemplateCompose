@@ -1,35 +1,31 @@
 package com.example.securitytemplate.core.navigation
 
-import androidx.navigation.NamedNavArgument
-
-
 object AuthDirections : NavigationGroup(
-    NavigationCommand(
-        emptyList<NamedNavArgument>(),
-        "authentication"
+    NavigationRoute(
+        "authentication",
+        emptyList()
     )
 ) {
-    val login = NavigationCommand(
-        emptyList<NamedNavArgument>(),
-        "${root.destination}/login"
+    val login = NavigationRoute(
+        "${root.destination}/login",
+        emptyList()
     )
-    val register = NavigationCommand(
-        emptyList<NamedNavArgument>(),
-        "${root.destination}/register"
+    val register = NavigationRoute(
+        "${root.destination}/register",
+        emptyList()
     )
     override var default = login
 }
 
 object HomeDirections : NavigationGroup(
-    NavigationCommand(
-        emptyList<NamedNavArgument>(),
-        "home"
+    NavigationRoute(
+        "home",
+        emptyList()
     )
 ) {
-    val home = NavigationCommand(
-        emptyList<NamedNavArgument>(),
-        "${root.destination}/home"
+    val home = NavigationRoute(
+        "${root.destination}/home",
+        emptyList()
     )
     override var default = home
 }
-

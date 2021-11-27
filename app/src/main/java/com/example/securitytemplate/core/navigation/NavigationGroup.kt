@@ -1,15 +1,9 @@
 package com.example.securitytemplate.core.navigation
 
-abstract class NavigationGroup(val root: NavigationCommand) {
-    abstract var default: NavigationCommand
+import androidx.navigation.NamedNavArgument
 
-    fun isMainRoute(navigationCommand: NavigationCommand): Boolean {
-        val destination = navigationCommand.destination
-        if (destination == root.destination || destination == default.destination) {
-            return true
-        }
-        return false
-    }
+abstract class NavigationGroup(val root: NavigationRoute) {
+    abstract var default: NavigationRoute
 
     fun isMainRoute(destination: String): Boolean {
         if (destination == root.destination || destination == default.destination) {
