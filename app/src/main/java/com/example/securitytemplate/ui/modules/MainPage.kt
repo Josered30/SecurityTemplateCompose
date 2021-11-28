@@ -2,9 +2,8 @@ package com.example.securitytemplate.ui.modules
 
 
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -100,7 +99,6 @@ fun InitNavigation(
             navigate(it)
         }.launchIn(this)
 
-
         authManager.stateSharedFlow.onEach { state ->
             Log.i("AUTH", state.name)
             authRoute(state)
@@ -124,7 +122,6 @@ fun MainPage() {
     val navigationManager = mainViewModel.navigationManager
     val authManager = mainViewModel.authManager
 
-
     val lifecycleOwner = LocalLifecycleOwner.current
     val showUIFlowLifecycleAware = remember(navigationManager.showUIFlow, lifecycleOwner) {
         navigationManager.showUIFlow.flowWithLifecycle(
@@ -138,8 +135,19 @@ fun MainPage() {
             Lifecycle.State.STARTED
         )
     }
-    val imeInsets by imeInsetsFlowLifecycleAware.collectAsState(false)
-    val showUI by showUIFlowLifecycleAware.collectAsState(false)
+
+    var init by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var showUISaveable by rememberSaveable() {
+        mutableStateOf(false)
+    }
+    var imeInsetsSaveable by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val imeInsets by imeInsetsFlowLifecycleAware.collectAsState(imeInsetsSaveable)
+    val showUI by showUIFlowLifecycleAware.collectAsState(showUISaveable)
 
     val navController = rememberAnimatedNavController()
 
@@ -149,9 +157,9 @@ fun MainPage() {
     var startDestination by rememberSaveable {
         mutableStateOf(navigationManager.startDestination.root.destination)
     }
-    var init by rememberSaveable {
-        mutableStateOf(false)
-    }
+
+    showUISaveable = showUI
+    imeInsetsSaveable = imeInsets
 
     val scaffoldState = rememberScaffoldState()
 
@@ -207,21 +215,34 @@ fun MainPage() {
 fun AppNavigation(
     navController: NavHostController,
     startDestination: String,
-    checkAuth: () -> Boolean
+    checkAuth: () -> Boolean,
 ) {
     AnimatedNavHost(
         navController,
-        startDestination
+        startDestination,
     ) {
 
         navigation(
             startDestination = AuthDirections.default.destination,
             route = AuthDirections.root.destination,
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(700))
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(700))
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(700))
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(700))
+            },
         ) {
             composable(
                 AuthDirections.login.destination,
-                AuthDirections.login.arguments
-            ) {
+                AuthDirections.login.arguments,
+
+                ) {
                 val loginViewModel: LoginViewModel = hiltViewModel()
                 LoginPage(loginViewModel)
             }
@@ -229,11 +250,44 @@ fun AppNavigation(
         navigation(
             startDestination = HomeDirections.default.destination,
             route = HomeDirections.root.destination,
+            enterTransition = {
+                when {
+                    AuthDirections.isRoute(initialState.destination.route.orEmpty()) -> slideInHorizontally(
+                        initialOffsetX = { 1000 },
+                        animationSpec = tween(700)
+                    )
+                    else -> null
+                }
+            },
+            exitTransition = {
+                when {
+                    AuthDirections.isRoute(targetState.destination.route.orEmpty()) -> slideOutHorizontally(
+                        targetOffsetX = { 1000 },
+                        animationSpec = tween(700)
+                    )
+                    else -> null
+                }
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -1000 },
+                    animationSpec = tween(700)
+                )
+
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -1000 },
+                    animationSpec = tween(700)
+                )
+
+            }
         ) {
             composable(
                 HomeDirections.home.destination,
-                HomeDirections.home.arguments
-            ) {
+                HomeDirections.home.arguments,
+
+                ) {
                 val homeViewModel: HomeViewModel = hiltViewModel()
                 HomePage(homeViewModel)
             }

@@ -10,10 +10,6 @@ object AuthDirections : NavigationGroup(
         "${root.destination}/login",
         emptyList()
     )
-    val register = NavigationRoute(
-        "${root.destination}/register",
-        emptyList()
-    )
     override var default = login
 }
 
