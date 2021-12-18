@@ -73,6 +73,7 @@ dependencies {
     //splashscreen
     //implementation "androidx.core:core-splashscreen:$versions.splashScreenVersion"
 
+
     //navigation
     implementation "androidx.navigation:navigation-compose:$versions.navigationVersion"
 
