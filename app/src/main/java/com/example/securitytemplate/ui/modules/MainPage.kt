@@ -94,8 +94,8 @@ fun InitNavigation(
         }.launchIn(this)
 
         authManager.stateSharedFlow.onEach { state ->
-            Log.i("AUTH", state.name)
-            authRoute(state)
+            Log.i("AUTH", state.authState.name)
+            authRoute(state.authState)
         }.launchIn(this)
 
         navController.addOnDestinationChangedListener { controller, destination, _ ->
@@ -118,6 +118,7 @@ fun MainPage() {
     val authManager = mainViewModel.authManager
 
     val lifecycleOwner = LocalLifecycleOwner.current
+
     val showUIFlowLifecycleAware = remember(navigationManager.showUIFlow, lifecycleOwner) {
         navigationManager.showUIFlow.flowWithLifecycle(
             lifecycleOwner.lifecycle,
@@ -134,7 +135,7 @@ fun MainPage() {
     var init by rememberSaveable {
         mutableStateOf(false)
     }
-    var showUISaveable by rememberSaveable() {
+    var showUISaveable by rememberSaveable {
         mutableStateOf(false)
     }
     var imeInsetsSaveable by rememberSaveable {
@@ -142,6 +143,17 @@ fun MainPage() {
     }
     var startDestination by rememberSaveable {
         mutableStateOf(navigationManager.startDestination.root.destination)
+    }
+
+    if (!init) {
+        if (authManager.isAuthenticated()) {
+            startDestination = HomeDirections.root.destination
+            showUISaveable = true
+        } else {
+            startDestination = AuthDirections.root.destination
+            showUISaveable = false
+        }
+        init = true
     }
 
     val imeInsets by imeInsetsFlowLifecycleAware.collectAsState(imeInsetsSaveable)
@@ -156,17 +168,6 @@ fun MainPage() {
     imeInsetsSaveable = imeInsets
 
     val scaffoldState = rememberScaffoldState()
-
-    if (!init) {
-        if (authManager.checkToken() && authManager.currentValue != AuthState.AUTH) {
-            startDestination = HomeDirections.root.destination
-            authManager.changeState(AuthState.AUTH)
-        } else if (!authManager.checkAuth()) {
-            startDestination = AuthDirections.root.destination
-            authManager.changeState(AuthState.UN_AUTH)
-        }
-        init = true
-    }
 
     InitNavigation(
         navController,
@@ -187,25 +188,32 @@ fun MainPage() {
         scaffoldState = scaffoldState,
         bottomBar = {
 
-            val offset = with(LocalDensity.current) {
-                val bottomPadding =
-                    rememberInsetsPaddingValues(
-                        insets = LocalWindowInsets.current.navigationBars,
-                        applyBottom = true
-                    ).calculateBottomPadding().roundToPx()
-                LocalConfiguration.current.screenHeightDp.dp.roundToPx() + bottomPadding
-            }
-            AnimatedVisibility(
-                visible = showUI,
-                enter = slideInVertically(initialOffsetY = { offset }),
-                exit = slideOutVertically(tween(3000), targetOffsetY = { offset })
-            ) {
+//            val offset = with(LocalDensity.current) {
+//                val bottomPadding =
+//                    rememberInsetsPaddingValues(
+//                        insets = LocalWindowInsets.current.navigationBars,
+//                        applyBottom = true
+//                    ).calculateBottomPadding().roundToPx()
+//                LocalConfiguration.current.screenHeightDp.dp.roundToPx() + bottomPadding
+//            }
+//            AnimatedVisibility(
+//                visible = showUI,
+//                enter = slideInVertically(initialOffsetY = { offset }),
+//                exit = slideOutVertically(tween(200), targetOffsetY = { offset })
+//            ) {
+//                BottomBar(navigationManager, currentRoute.orEmpty())
+//            }
+            if (showUI) {
                 BottomBar(navigationManager, currentRoute.orEmpty())
             }
         },
     ) { innerPadding ->
         Box(Modifier.padding(innerPadding)) {
-            AppNavigation(navController, startDestination, mainViewModel.authManager::checkAuth)
+            AppNavigation(
+                navController,
+                startDestination,
+                mainViewModel.authManager::isAuthenticated
+            )
         }
     }
 }
@@ -220,7 +228,7 @@ fun MainPage() {
 fun AppNavigation(
     navController: NavHostController,
     startDestination: String,
-    checkAuth: () -> Boolean,
+    isAuthenticate: () -> Boolean,
 ) {
 
     val screenWidth =

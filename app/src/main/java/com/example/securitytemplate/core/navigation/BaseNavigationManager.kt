@@ -19,11 +19,9 @@ abstract class BaseNavigationManager(
     private val _imeInsetsFlow = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     val imeInsetsFlow = _imeInsetsFlow.asSharedFlow()
 
-
     var canPop = false
     var currentRoute = ""
     var lastRoute = ""
-
 
     fun setShowUIFlow(flag: Boolean) {
         _showUIFlow.tryEmit(flag)

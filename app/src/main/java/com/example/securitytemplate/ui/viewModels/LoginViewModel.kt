@@ -17,9 +17,7 @@ class LoginViewModel @Inject constructor(
     BaseViewModel(navigationManager, authManager) {
 
     fun login(): Unit {
-        authManager.setToken("TOKEN")
-        authManager.changeState(AuthState.AUTH)
+        authManager.authenticate("id", "token", "token")
     }
-
 
 }

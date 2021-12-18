@@ -21,7 +21,7 @@ object RemoteModule {
 //            .Builder()
 //            .readTimeout(5, TimeUnit.SECONDS)
 //            .build()
-
+//
 //    @Provides
 //    @Singleton
 //    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {

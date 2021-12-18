@@ -18,15 +18,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun LoginPage(loginViewModel: LoginViewModel) {
-
-
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     val navigationManager = loginViewModel.navigationManager
-
-    LaunchedEffect(Unit) {
-            delay(10)
-        navigationManager.setShowUIFlow(false)
-    }
 
     Scaffold(
         scaffoldState = scaffoldState,

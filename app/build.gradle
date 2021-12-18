@@ -113,6 +113,12 @@ dependencies {
     // coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutineVersion"
 
+
+    // retrofit
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofitVersion"
+    implementation "com.squareup.okhttp3:okhttp:4.9.1"
+
     // hilt
     implementation "com.google.dagger:hilt-android:$versions.hiltCoreVersion"
     kapt "com.google.dagger:hilt-compiler:$versions.hiltCoreVersion"

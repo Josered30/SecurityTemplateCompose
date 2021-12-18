@@ -18,11 +18,7 @@ fun HomePage(homeViewModel: HomeViewModel) {
     val authManager = homeViewModel.authManager
 
     LaunchedEffect(Unit) {
-        if(AuthDirections.isRoute(navigationManager.lastRoute)) {
-            delay(500)
-        } else {
-            delay(10)
-        }
+        delay(500)
         navigationManager.setShowUIFlow(true)
     }
 

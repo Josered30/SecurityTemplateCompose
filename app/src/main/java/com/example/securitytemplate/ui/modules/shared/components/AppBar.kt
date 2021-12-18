@@ -30,8 +30,7 @@ fun AppBar(
             IconButton(
                 onClick = {
                     navigationManager.setShowUIFlow(false)
-                    authManager.removeToken()
-                    authManager.changeState(AuthState.UN_AUTH)
+                    authManager.unAuthenticate()
                 },
                 content = {
                     Icon(
