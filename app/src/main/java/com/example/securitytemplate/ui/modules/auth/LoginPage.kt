@@ -24,7 +24,7 @@ fun LoginPage(loginViewModel: LoginViewModel) {
     val navigationManager = loginViewModel.navigationManager
 
     LaunchedEffect(Unit) {
-        delay(10)
+            delay(10)
         navigationManager.setShowUIFlow(false)
     }
 

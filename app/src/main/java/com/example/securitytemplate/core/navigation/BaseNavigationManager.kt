@@ -21,6 +21,7 @@ abstract class BaseNavigationManager(
 
     var canPop = false
     var currentRoute = ""
+    var lastRoute = ""
 
 
     fun setShowUIFlow(flag: Boolean) {

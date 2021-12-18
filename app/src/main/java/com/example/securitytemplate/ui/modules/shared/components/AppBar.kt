@@ -29,6 +29,7 @@ fun AppBar(
         actions = {
             IconButton(
                 onClick = {
+                    navigationManager.setShowUIFlow(false)
                     authManager.removeToken()
                     authManager.changeState(AuthState.UN_AUTH)
                 },
@@ -37,7 +38,7 @@ fun AppBar(
                         Icons.Rounded.ExitToApp,
                         "Logout",
                         tint = MaterialTheme.colors.onBackground
-                        )
+                    )
                 })
         },
     )

@@ -12,7 +12,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -29,10 +32,7 @@ import com.example.securitytemplate.ui.modules.auth.LoginPage
 import com.example.securitytemplate.ui.viewModels.MainViewModel
 import com.example.securitytemplate.ui.modules.home.HomePage
 import com.example.securitytemplate.ui.modules.shared.components.BottomBar
-import com.example.securitytemplate.ui.modules.shared.components.Empty
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.navigationBarsWithImePadding
-import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.flow.*
@@ -47,9 +47,7 @@ fun InitNavigation(
     navController: NavHostController,
     navigationManager: BaseNavigationManager,
     authManager: AuthManager,
-    startDestination: String,
     setStartDestination: (String) -> Unit
-
 ) {
     var init by rememberSaveable {
         mutableStateOf(false)
@@ -68,7 +66,7 @@ fun InitNavigation(
                     AuthDirections.root.destination
                 }
             }
-            //setStartDestination(startDestinationAux)
+            setStartDestination(startDestinationAux)
             val start = navController.graph.findStartDestination()
             navController.popBackStack(start.id, true)
             navController.graph.setStartDestination(startDestinationAux)
@@ -80,7 +78,6 @@ fun InitNavigation(
                 // Pop up to the start destination of the graph to
                 // avoid building up a large stack of destinations
                 // on the back stack as users select items
-
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
                 }
@@ -106,6 +103,7 @@ fun InitNavigation(
 
         navController.addOnDestinationChangedListener { controller, destination, _ ->
             navigationManager.canPop = controller.previousBackStackEntry != null
+            navigationManager.lastRoute = navigationManager.currentRoute
             navigationManager.currentRoute = destination.route.orEmpty()
         }
     }
@@ -145,6 +143,9 @@ fun MainPage() {
     var imeInsetsSaveable by rememberSaveable {
         mutableStateOf(false)
     }
+    var startDestination by rememberSaveable {
+        mutableStateOf(navigationManager.startDestination.root.destination)
+    }
 
     val imeInsets by imeInsetsFlowLifecycleAware.collectAsState(imeInsetsSaveable)
     val showUI by showUIFlowLifecycleAware.collectAsState(showUISaveable)
@@ -153,10 +154,6 @@ fun MainPage() {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    var startDestination by rememberSaveable {
-        mutableStateOf(navigationManager.startDestination.root.destination)
-    }
 
     showUISaveable = showUI
     imeInsetsSaveable = imeInsets
@@ -178,9 +175,7 @@ fun MainPage() {
         navController,
         navigationManager,
         authManager,
-        startDestination
     ) { startDestination = it }
-
 
     val modifier: Modifier = if (imeInsets) {
         Modifier
@@ -194,7 +189,20 @@ fun MainPage() {
         backgroundColor = Color.Transparent,
         scaffoldState = scaffoldState,
         bottomBar = {
-            if (showUI) {
+
+            val offset = with(LocalDensity.current) {
+                val bottomPadding =
+                    rememberInsetsPaddingValues(
+                        insets = LocalWindowInsets.current.navigationBars,
+                        applyBottom = true
+                    ).calculateBottomPadding().roundToPx()
+                LocalConfiguration.current.screenHeightDp.dp.roundToPx() + bottomPadding
+            }
+            AnimatedVisibility(
+                visible = showUI,
+                enter = slideInVertically(initialOffsetY = { offset }),
+                exit = slideOutVertically(tween(3000), targetOffsetY = { offset })
+            ) {
                 BottomBar(navigationManager, currentRoute.orEmpty())
             }
         },
@@ -217,6 +225,11 @@ fun AppNavigation(
     startDestination: String,
     checkAuth: () -> Boolean,
 ) {
+
+    val screenWidth =
+        with(LocalDensity.current) { LocalConfiguration.current.screenWidthDp.dp.roundToPx() }
+
+
     AnimatedNavHost(
         navController,
         startDestination,
@@ -226,34 +239,34 @@ fun AppNavigation(
             startDestination = AuthDirections.default.destination,
             route = AuthDirections.root.destination,
             enterTransition = {
-                slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(700))
+                slideInHorizontally(initialOffsetX = { -screenWidth }, animationSpec = tween(700))
             },
             exitTransition = {
-                slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(700))
+                slideOutHorizontally(targetOffsetX = { -screenWidth }, animationSpec = tween(700))
             },
             popEnterTransition = {
-                slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(700))
+                slideInHorizontally(initialOffsetX = { screenWidth }, animationSpec = tween(700))
             },
             popExitTransition = {
-                slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(700))
+                slideOutHorizontally(targetOffsetX = { screenWidth }, animationSpec = tween(700))
             },
         ) {
             composable(
                 AuthDirections.login.destination,
-                AuthDirections.login.arguments,
-
-                ) {
+                AuthDirections.login.arguments
+            ) {
                 val loginViewModel: LoginViewModel = hiltViewModel()
                 LoginPage(loginViewModel)
             }
         }
+
         navigation(
             startDestination = HomeDirections.default.destination,
             route = HomeDirections.root.destination,
             enterTransition = {
                 when {
                     AuthDirections.isRoute(initialState.destination.route.orEmpty()) -> slideInHorizontally(
-                        initialOffsetX = { 1000 },
+                        initialOffsetX = { screenWidth },
                         animationSpec = tween(700)
                     )
                     else -> null
@@ -262,7 +275,7 @@ fun AppNavigation(
             exitTransition = {
                 when {
                     AuthDirections.isRoute(targetState.destination.route.orEmpty()) -> slideOutHorizontally(
-                        targetOffsetX = { 1000 },
+                        targetOffsetX = { screenWidth },
                         animationSpec = tween(700)
                     )
                     else -> null
@@ -270,14 +283,14 @@ fun AppNavigation(
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -1000 },
+                    initialOffsetX = { -screenWidth },
                     animationSpec = tween(700)
                 )
 
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -1000 },
+                    targetOffsetX = { -screenWidth },
                     animationSpec = tween(700)
                 )
 
@@ -286,8 +299,7 @@ fun AppNavigation(
             composable(
                 HomeDirections.home.destination,
                 HomeDirections.home.arguments,
-
-                ) {
+            ) {
                 val homeViewModel: HomeViewModel = hiltViewModel()
                 HomePage(homeViewModel)
             }
