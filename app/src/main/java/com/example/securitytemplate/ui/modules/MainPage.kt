@@ -88,7 +88,6 @@ fun InitNavigation(
                 // restoreState = true
             }
         }
-
         navigationManager.appSharedFlow.onEach {
             navigate(it)
         }.launchIn(this)
