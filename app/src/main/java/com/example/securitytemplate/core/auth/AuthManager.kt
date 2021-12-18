@@ -17,7 +17,7 @@ class AuthManager(
         MutableSharedFlow(extraBufferCapacity = 1)
     val stateSharedFlow = _stateSharedFlow.asSharedFlow()
 
-    var currentValue = AuthState.EMPTY
+    var currentValue = AuthState.UN_AUTH
         private set
 
     init {

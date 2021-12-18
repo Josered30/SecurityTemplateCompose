@@ -56,9 +56,6 @@ fun InitNavigation(
 
         val authRoute: (AuthState) -> Unit = {
             val startDestinationAux = when (it) {
-                AuthState.EMPTY -> {
-                    AuthDirections.root.destination
-                }
                 AuthState.AUTH -> {
                     HomeDirections.root.destination
                 }
